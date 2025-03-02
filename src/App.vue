@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-100 text-gray-900">
     <header class="bg-emerald-600 text-white p-4 shadow-md">
-      <h1 class="text-xl font-bold text-center">Simple Shopping</h1>
+      <h1 class="text-xl font-bold text-center">Shopping List App</h1>
     </header>
 
     <main class="container mx-auto p-4 max-w-md">
@@ -151,13 +151,17 @@
                 </div>
               </div>
 
-              <div v-if="!item.purchased" class="mt-2">
+              <div class="mt-2 flex space-x-2">
                 <button @click="openPurchaseModal(item)"
-                  class="w-full bg-emerald-100 text-emerald-800 py-1.5 rounded text-sm hover:bg-emerald-200 transition-colors">
-                  Mark as Purchased
+                  class="flex-1 bg-emerald-100 text-emerald-800 py-1.5 rounded text-sm hover:bg-emerald-200 transition-colors">
+                  {{ item.purchased ? 'Edit' : 'Mark as Purchased' }}
+                </button>
+                <button v-if="item.purchased" @click="unpurchaseItem(item)"
+                  class="flex-1 bg-red-100 text-red-800 py-1.5 rounded text-sm hover:bg-red-200 transition-colors">
+                  Unpurchase
                 </button>
               </div>
-              <div v-else class="text-sm text-gray-600 mt-1">
+              <div v-if="item.purchased" class="text-sm text-gray-600 mt-1">
                 Purchased at: {{ getStoreName(item.storeId) }}
               </div>
             </div>
@@ -240,7 +244,9 @@
     <div v-if="purchaseModal.show"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-        <h3 class="text-lg font-semibold mb-4">Mark Item as Purchased</h3>
+        <h3 class="text-lg font-semibold mb-4">
+          {{ purchaseModal.item?.purchased ? 'Edit Purchase' : 'Mark Item as Purchased' }}
+        </h3>
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Item</label>
@@ -293,17 +299,16 @@ const selectedList = ref(null)
 
 // Currency options
 const currencies = [
-  { code: 'EUR', symbol: '€' },
-  { code: 'KES', symbol: 'KES' },
   { code: 'USD', symbol: '$' },
-  // { code: 'GBP', symbol: '£' },
-  // { code: 'JPY', symbol: '¥' },
-  // { code: 'CAD', symbol: 'C$' },
-  // { code: 'AUD', symbol: 'A$' },
-  // { code: 'INR', symbol: '₹' },
-  // { code: 'CNY', symbol: '¥' },
-  // { code: 'BRL', symbol: 'R$' },
-  // { code: 'MXN', symbol: 'Mex$' }
+  { code: 'EUR', symbol: '€' },
+  { code: 'GBP', symbol: '£' },
+  { code: 'JPY', symbol: '¥' },
+  { code: 'CAD', symbol: 'C$' },
+  { code: 'AUD', symbol: 'A$' },
+  { code: 'INR', symbol: '₹' },
+  { code: 'CNY', symbol: '¥' },
+  { code: 'BRL', symbol: 'R$' },
+  { code: 'MXN', symbol: 'Mex$' }
 ]
 const selectedCurrency = ref(currencies[0])
 
@@ -327,7 +332,8 @@ const purchaseModal = ref({
   show: false,
   item: null,
   actualPrice: '',
-  storeId: ''
+  storeId: '',
+  isEdit: false
 })
 
 // Format currency
@@ -471,8 +477,9 @@ const openPurchaseModal = (item) => {
   purchaseModal.value = {
     show: true,
     item: item,
-    actualPrice: item.expectedPrice.toString(),
-    storeId: ''
+    actualPrice: item.purchased ? item.actualPrice.toString() : item.expectedPrice.toString(),
+    storeId: item.storeId || '',
+    isEdit: item.purchased
   }
 }
 
@@ -489,10 +496,18 @@ const markAsPurchased = () => {
     item.actualPrice = parseFloat(purchaseModal.value.actualPrice)
     item.storeId = purchaseModal.value.storeId
 
-    // Update expected price for future reference
-    item.expectedPrice = item.actualPrice
+    // Update expected price for future reference only if it's a new purchase
+    if (!purchaseModal.value.isEdit) {
+      item.expectedPrice = item.actualPrice
+    }
   }
 
   closePurchaseModal()
+}
+
+const unpurchaseItem = (item) => {
+  item.purchased = false
+  item.actualPrice = 0
+  item.storeId = null
 }
 </script>

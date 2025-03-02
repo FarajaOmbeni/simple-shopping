@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-100 text-gray-900">
     <header class="bg-emerald-600 text-white p-4 shadow-md">
-      <h1 class="text-xl font-bold text-center">Shopping List App</h1>
+      <h1 class="text-xl font-bold text-center">Simple Shopping</h1>
     </header>
 
     <main class="container mx-auto p-4 max-w-md">
@@ -299,16 +299,17 @@ const selectedList = ref(null)
 
 // Currency options
 const currencies = [
-  { code: 'USD', symbol: '$' },
   { code: 'EUR', symbol: '€' },
-  { code: 'GBP', symbol: '£' },
-  { code: 'JPY', symbol: '¥' },
-  { code: 'CAD', symbol: 'C$' },
-  { code: 'AUD', symbol: 'A$' },
-  { code: 'INR', symbol: '₹' },
-  { code: 'CNY', symbol: '¥' },
-  { code: 'BRL', symbol: 'R$' },
-  { code: 'MXN', symbol: 'Mex$' }
+  { code: 'KES', symbol: 'KES' },
+  { code: 'USD', symbol: '$' },
+  // { code: 'GBP', symbol: '£' },
+  // { code: 'JPY', symbol: '¥' },
+  // { code: 'CAD', symbol: 'C$' },
+  // { code: 'AUD', symbol: 'A$' },
+  // { code: 'INR', symbol: '₹' },
+  // { code: 'CNY', symbol: '¥' },
+  // { code: 'BRL', symbol: 'R$' },
+  // { code: 'MXN', symbol: 'Mex$' }
 ]
 const selectedCurrency = ref(currencies[0])
 

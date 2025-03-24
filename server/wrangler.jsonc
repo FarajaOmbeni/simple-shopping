@@ -7,7 +7,7 @@
 	"name": "server",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-03-17",
-	// "account_id": "bd71979288cb29cc1028d6a0cf5354d0",
+	"account_id": "bd71979288cb29cc1028d6a0cf5354d0",
 	"observability": {
 		"enabled": true
 	}
